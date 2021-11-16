@@ -105,7 +105,7 @@ unsigned int adc_read(unsigned char adc_channel_num) {
   }
 
   *my_ADMUX  += adc_channel_num;                        // set channel selection bits
-  *my_ADCSRA |= 0b01000000;                             // set ADCSRA bit to 1, start start conversion
+  *my_ADCSRA |= 0b01000000;                             // set ADCSRA bit to 1, start conversion
   
   while(*my_ADCSRA & 0b000000000);                      // wait for the conversion
   
