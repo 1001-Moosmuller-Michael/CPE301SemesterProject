@@ -64,7 +64,7 @@ bool ST_DISABLED, ST_IDLE, ST_ERROR, ST_RUNNING;
 int STATE;                  // State Variable
 int pos;                    // Servo Motor Position
 char buf[80];               // Serial Input Buffer
-float TEMP = 20;            // Control Temperature
+float TEMP = 21;            // Control Temperature
 int value;                  // Water Level Reading
 
 // Prototypes
@@ -110,7 +110,7 @@ void setup() {
 
 void loop() {
 
-      Button.loop();
+    Button.loop();
     
     // State Control
     STATE = getState();
@@ -159,8 +159,8 @@ int getState() {
 void Disabled() {
     Yellow.on();
     int btnState = Button.getState();
-    Serial.println(btnState);
-    if (btnState == 1) {
+    //Serial.println(btnState);
+    if (btnState == 0) {
         Yellow.off();
         ST_DISABLED = false;
         ST_IDLE = true;
@@ -178,7 +178,7 @@ void Idle() {
         ST_IDLE = false;
         ST_RUNNING = true;
     }
-    if (value == 0) {
+    if (value < 100) {
         Green.off();
         ST_IDLE = false;
         ST_ERROR = true;
@@ -193,7 +193,7 @@ void Error() {
     Serial.println("Water Level Low!");
     LCD.clear();
     LCD.print("Water Level Low!");
-    if (value > 0) {
+    if (value > 200) {
         Red.off();
         ST_ERROR = false;
         ST_IDLE = true;
@@ -213,7 +213,7 @@ void Running() {
         ST_RUNNING = false;
         ST_IDLE = true;
     }
-    if (value == 0) {
+    if (value < 100) {
         digitalWrite(ENABLE,LOW);                   // Illegal
         Blue.off();
         ST_RUNNING = false;
@@ -290,8 +290,8 @@ void readTempHumLCD() {
 void readWaterLvl() {
 
     value = analogRead(WLD_SNS_PIN);                                // Illegal
-//  Serial.print("Water Level: ");
-//  Serial.println(value);
+  Serial.print("Water Level: ");
+  Serial.println(value);
 
 }
 
